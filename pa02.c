@@ -39,6 +39,28 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    
+
+    //kX IN
+    //--Read size
+    unsigned int size;
+    fscanf(kfile, "%u", &size);
+
+    unsigned int in = 0;
+    unsigned int key[size][size];
+    for(int i = 0; i < size; i++)
+    {
+        for(int j = 0; j < size; j++)
+        {
+            fscanf(kfile, "%u", &in);
+            key[i][j] = in;
+            printf("[%d,%d]=%u\n", i, j, key[i][j]);
+        }
+    }
+    //printf("size: %u", size);
+
+
+    fclose(pfile);
     fclose(kfile);
     return 0;
 }
