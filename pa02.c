@@ -11,7 +11,11 @@
 | All execute commands above have been tested on Eustis
 | Class: CIS3360 - Security in Computing - Summer 2026
 | Instructor: McAlpin
+<<<<<<< Updated upstream
 | Due Date: TODO
+=======
+| Due Date: 2026.07.07
+>>>>>>> Stashed changes
 +===========================================================================*/
 
 #include <stdio.h>
@@ -89,11 +93,21 @@ int main(int argc, char *argv[])
         for(int i = 0; i < size; i++)
         {   // -Read char
             cin = fgetc(pfile);
+<<<<<<< Updated upstream
+=======
+            
+>>>>>>> Stashed changes
             // -End of file condition
             if(cin == EOF) 
             {   // -Check if last block was filled. Difference is padding count.
                 padding = size - padcount;
+<<<<<<< Updated upstream
                 done = 1;
+=======
+                if(padding == size) padding = 0;
+                done = 1;
+                break;
+>>>>>>> Stashed changes
             }   // -Valid char condition
             else if((cin >= 'a' && cin <= 'z') || (cin >= 'A' && cin <= 'Z'))
             {   // -Convert uppercase to lowercase
@@ -107,7 +121,10 @@ int main(int argc, char *argv[])
                 i--;
             }
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         //--Padding addition loop
         for(int i = 0; i < padding; i++)
         {   // -Add padding using padding var
