@@ -18,8 +18,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned int toIndex(char in);
-char toAscii(unsigned int index);
+//Returns alphabet index of char ('a' = 0)
+static inline unsigned int toIndex(char in){ return (unsigned int)(in - 'a'); }
+//Returns char from alphabet index ('a' = 0)
+static inline char toAscii(unsigned int index){ return ((char)index) + 'a'; }
 
 int main(int argc, char *argv[])
 {
@@ -42,17 +44,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    //TEST
-    //TODO Remove
-    //printf("%c= %u\n", 'a', toIndex('a'));
-    //printf("%c= %u\n", 'z', toIndex('z'));
-    //printf("%u= %c\n", 10, toAscii((unsigned int)10));
-
     //-- Get size of file
     // Send cursor to end, then ftell
     fseek(pfile, 0, SEEK_END);
     unsigned int fileSize = (unsigned int)ftell(pfile);
-    //printf("fS:%u\n", fileSize);
+    
     // Return cursor to start
     fseek(pfile, 0, SEEK_SET);
     char input[fileSize+1], output[fileSize+1];
@@ -75,12 +71,9 @@ int main(int argc, char *argv[])
             fscanf(kfile, "%u", &din);
             key[i][j] = din;
             printf("\t%u", din);
-            //TODO REMOVE
-            //printf("[%d,%d]=%u\n", i, j, key[i][j]);
         }
         printf("\n");
     }
-    //printf("size: %u", size);
 
     //pX ENCRYPT
     unsigned int block[size];
@@ -89,19 +82,17 @@ int main(int argc, char *argv[])
     memset(calc, 0, sizeof(calc)); 
     
     //Read and Encrypt Loop
-    char done = 0, cin = 0, incount = 0, outcount = 0, padcount = 0, padding = 0;
+    char  cin = 0;
+    unsigned int done = 0, incount = 0, outcount = 0, padcount = 0, padding = 0;
     while(!done){
         //--File read loop
         for(int i = 0; i < size; i++)
-        {
-            
-            // -Read char
+        {   // -Read char
             cin = fgetc(pfile);
             // -End of file condition
             if(cin == EOF) 
             {   // -Check if last block was filled. Difference is padding count.
                 padding = size - padcount;
-                //printf("\n%u",padding);
                 done = 1;
             }   // -Valid char condition
             else if((cin >= 'a' && cin <= 'z') || (cin >= 'A' && cin <= 'Z'))
@@ -116,6 +107,7 @@ int main(int argc, char *argv[])
                 i--;
             }
         }
+
         //--Padding addition loop
         for(int i = 0; i < padding; i++)
         {   // -Add padding using padding var
@@ -123,30 +115,17 @@ int main(int argc, char *argv[])
             input[incount++] = 'x';
         }   
         padcount = 0;
+
         //--Encryption loop
         for(int i = 0; i < size; i++)
         {
             for(int j = 0; j < size; j++)
-            {
-                //printf("\ncalc init = %u\n", calc[i]);
-                //if(j!=0) printf("\t+");
-                //else printf("\t ");
                 calc[i] += (key[i][j]*block[j]);
-                //TODO REMOVE
-                //printf("%u*%c (%u)", key[i][j], toAscii(block[j]), block[j]);
-            }
-            //TODO REMOVE
-            //printf("%u->", calc[i]);
             output[outcount++] = toAscii(calc[i]%26);
-            //TODO REMOVE
-            //printf("\n\t  =%u\n\n",output[outcount-1]);
             memset(calc, 0, sizeof(calc)); 
-            //TODO REMOVE
-            //printf("%c",toAscii(calc[i]));
-            
         }
-        //printf("\n");
     }
+    
     input[incount] = '\0';
     output[outcount] = '\0';
 
@@ -181,16 +160,6 @@ int main(int argc, char *argv[])
     fclose(kfile);
     return 0;
     
-}
-
-unsigned int toIndex(char in)
-{   //Returns alphabet index of char ('a' = 0)
-    return (unsigned int)(in - 'a');
-}
-
-char toAscii(unsigned int index)
-{   //Returns char from alphabet index ('a' = 0)
-    return ((char)index) + 'a';
 }
 
 /*=============================================================================
